@@ -15,13 +15,13 @@ Welcome to my Advent of Code adventure! This repository is a personal learning p
 ```
 advent-of-code-2024/
 │
-├── day01/
+├── day-01/
 │   ├── solution.go      # My initial solution
 │   ├── improved.go      # Refined solution after Claude's feedback
 │   ├── problem.md       # AoC problem description
 │   └── input.txt        # Input file
 │
-├── day02/
+├── day-02/
 │   └── ...
 └── README.md
 ```
