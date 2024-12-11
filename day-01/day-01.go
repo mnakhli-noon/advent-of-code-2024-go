@@ -62,6 +62,23 @@ func main() {
 	for i := 0; i < 1000; i++ {
 		distance += int(math.Abs(float64(firstArray[i] - secondArray[i])))
 	}
-	fmt.Println(distance)
+	fmt.Println("Distance:", distance)
 
+	m := make(map[int]int)
+
+	for i := 0; i < 1000; i++ {
+		count, exist := m[secondArray[i]]
+		if exist {
+			m[secondArray[i]] = count + 1
+		} else {
+			m[secondArray[i]] = 1
+		}
+	}
+
+	similarity := 0
+	for i := 0; i < 1000; i++ {
+		similarity += firstArray[i] * m[firstArray[i]]
+	}
+
+	fmt.Println("Similarity:", similarity)
 }
