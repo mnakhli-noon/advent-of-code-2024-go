@@ -7,7 +7,7 @@ Welcome to my Advent of Code adventure! This repository is a personal learning p
 ### My Learning Approach 🚀
 
 - **Day-by-Day Learning**: I'll be solving each puzzle first in my own way
-- **Collaborative Improvement**: After my initial solution, I'll share my code with [Claude](www.claude.ai)
+- **Collaborative Improvement**: After my initial solution, I'll share my code with [Claude](https://www.claude.ai)
 - **Go Language Mastery**: Seeking guidance to understand the "Go way" of solving problems
 
 ## Repository Structure
