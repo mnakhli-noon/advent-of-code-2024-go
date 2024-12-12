@@ -17,7 +17,7 @@ advent-of-code-2024/
 │
 ├── day-01/
 │   ├── solution.go      # My initial solution
-│   ├── improved.go      # Refined solution after Claude's feedback
+│   ├── improved.go      # Refined solution after Claude's feedback -- might not exist
 │   ├── problem.md       # AoC problem description
 │   └── input.txt        # Input file
 │
