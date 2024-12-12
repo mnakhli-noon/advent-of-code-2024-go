@@ -31,6 +31,45 @@ func abs(number int) int {
 	}
 }
 
+func isItSafe(x int, y int, inc bool) bool {
+	dif := y - x
+
+	if (abs(dif) < 1 || abs(dif) > 3) || ((dif > 0) && !inc) || ((dif < 0) && inc) {
+		return false
+	}
+
+	return true
+}
+
+func checkIfReportSafe(report []int) bool {
+	inc := report[1] > report[0]
+	for i := 0; i < len(report)-1; i++ {
+		if isItSafe(report[i], report[i+1], inc) {
+			continue
+		} else {
+			return false
+		}
+	}
+	return true
+}
+
+func removeItemAt(array []int, index int) []int {
+	result := make([]int, 0, len(array)-1)
+	result = append(result, array[:index]...)
+	result = append(result, array[index+1:]...)
+
+	return result
+}
+func checkIfReportSafeWithTolerence(report []int) bool {
+	for i := 0; i < len(report); i++ {
+		newArray := removeItemAt(report, i)
+		if checkIfReportSafe(newArray) {
+			return true
+		}
+	}
+	return false
+}
+
 func main() {
 	file, err := os.Open("input.txt")
 
@@ -48,20 +87,9 @@ func main() {
 			log.Fatal(err)
 		}
 
-		inc := reportInt[0] < reportInt[1]
-		shouldInc := true
-
-		for i := 0; i < len(reportInt)-1; i++ {
-			dif := reportInt[i+1] - reportInt[i]
-			if abs(dif) < 1 || abs(dif) > 3 {
-				shouldInc = false
-				break
-			} else if ((dif > 0) && !inc) || ((dif < 0) && inc) {
-				shouldInc = false
-				break
-			}
-		}
-		if shouldInc {
+		if checkIfReportSafe(reportInt) {
+			safe++
+		} else if checkIfReportSafeWithTolerence(reportInt) {
 			safe++
 		}
 
