@@ -52,7 +52,7 @@ func abs(number int) int {
 	}
 }
 
-func mainClaude() { // rename this if you wanna run it
+func solvePartOneClaude() {
 	firstList, secondList, err := parseNumbersFromFile("input.txt")
 	if err != nil {
 		log.Fatal(err)
@@ -66,8 +66,14 @@ func mainClaude() { // rename this if you wanna run it
 	for i := 0; i < len(firstList); i++ {
 		distance += abs(firstList[i] - secondList[i])
 	}
-
 	fmt.Println("Distance: ", distance)
+}
+
+func solvePartTwoClaude() {
+	firstList, secondList, err := parseNumbersFromFile("input.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	occurrences := make(map[int]int)
 
@@ -82,5 +88,4 @@ func mainClaude() { // rename this if you wanna run it
 	}
 
 	fmt.Println("Similarity: ", similarity)
-
 }
