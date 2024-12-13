@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -70,7 +71,34 @@ func checkIfReportSafeWithTolerence(report []int) bool {
 	return false
 }
 
-func main() {
+func solvePartOne() {
+
+	file, err := os.Open("input.txt")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	safe := 0
+	scanner := bufio.NewScanner(file)
+
+	for scanner.Scan() {
+		report := strings.Fields(scanner.Text())
+		reportInt, err := convertToArrayOfInt(report)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		if checkIfReportSafe(reportInt) {
+			safe++
+		}
+	}
+
+	fmt.Println("Safe: ", safe)
+
+}
+
+func solvePartTwo() {
 	file, err := os.Open("input.txt")
 
 	if err != nil {
@@ -92,9 +120,19 @@ func main() {
 		} else if checkIfReportSafeWithTolerence(reportInt) {
 			safe++
 		}
-
 	}
 
 	fmt.Println("Safe: ", safe)
 
+}
+
+func main() {
+	isPartTwo := flag.Bool("partTwo", false, "Solve part two")
+
+	flag.Parse()
+	if *isPartTwo {
+		solvePartTwo()
+	} else {
+		solvePartOne()
+	}
 }
