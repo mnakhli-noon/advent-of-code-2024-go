@@ -31,17 +31,24 @@ go run solution.go
 
 # Build and run Part Two
 go run solution.go -partTwo
+
+# Use the Claude-improved solution (if improved.go exists)
+go run solution.go improved.go -claude
+
+# Use Claude-improved solution for Part Two
+go run solution.go improved.go -claude -partTwo
 ```
 
 ### Flags
 - `-partTwo`: Switches the solution to solve Part Two of the puzzle
   - When this flag is passed, the program will typically use a different logic or input processing method for Part Two of the puzzle
+- `-claude`: Uses the improved solution from `improved.go` (if the file exists)
 
 ## Learning Goals
 - [ ] Understand Go's syntax and idioms
 - [ ] Learn best practices in Go programming
 - [ ] Improve problem-solving skills
-- [ ] Complete as many Advent of Code puzzle as possible
+- [ ] Complete as many Advent of Code puzzles as possible
 
 ## How This Works
 1. I solve the puzzle using my current knowledge
@@ -63,4 +70,5 @@ Feel free to follow along, provide suggestions, or share learning tips!
 
 ---
 *Happy Coding and Happy Holidays!* 🎅🏼👩‍💻
+
 *PS: this README file is AI generated*
