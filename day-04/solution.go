@@ -8,97 +8,43 @@ import (
 	"strings"
 )
 
-func isRow(characters [][]string, x int, y int) bool {
-	if y > len(characters[0])-4 {
-		return false
-	}
-
-	if characters[x][y+1] != "M" || characters[x][y+2] != "A" || characters[x][y+3] != "S" {
-		return false
-	}
-
-	return true
+var M = [][]int{
+	{1, 0},
+	{1, 1},
+	{0, 1},
+	{-1, 1},
+	{-1, 0},
+	{-1, -1},
+	{0, -1},
+	{1, -1},
+}
+var A = [][]int{
+	{2, 0},
+	{2, 2},
+	{0, 2},
+	{-2, 2},
+	{-2, 0},
+	{-2, -2},
+	{0, -2},
+	{2, -2},
 }
 
-func isReverseRow(characters [][]string, x int, y int) bool {
-	if y < 3 {
-		return false
-	}
-
-	if characters[x][y-1] != "M" || characters[x][y-2] != "A" || characters[x][y-3] != "S" {
-		return false
-	}
-
-	return true
+var S = [][]int{
+	{3, 0},
+	{3, 3},
+	{0, 3},
+	{-3, 3},
+	{-3, 0},
+	{-3, -3},
+	{0, -3},
+	{3, -3},
 }
 
-func isCol(characters [][]string, x int, y int) bool {
-	if x > len(characters)-4 {
-		return false
+func isInside(x int, y int, maxX int, maxY int) bool {
+	if x >= 0 && x <= maxX && y >= 0 && y <= maxY {
+		return true
 	}
-
-	if characters[x+1][y] != "M" || characters[x+2][y] != "A" || characters[x+3][y] != "S" {
-		return false
-	}
-
-	return true
-}
-
-func isReverseCol(characters [][]string, x int, y int) bool {
-	if x < 3 {
-		return false
-	}
-
-	if characters[x-1][y] != "M" || characters[x-2][y] != "A" || characters[x-3][y] != "S" {
-		return false
-	}
-
-	return true
-}
-
-func isDiagonalLeft(characters [][]string, x int, y int) bool {
-	if x > len(characters)-4 || y < 3 {
-		return false
-	}
-	if characters[x+1][y-1] != "M" || characters[x+2][y-2] != "A" || characters[x+3][y-3] != "S" {
-		return false
-	}
-
-	return true
-}
-
-func isReverseDiagonalLeft(characters [][]string, x int, y int) bool {
-	if x < 3 || y-3 < 0 {
-		return false
-	}
-	if characters[x-1][y-1] != "M" || characters[x-2][y-2] != "A" || characters[x-3][y-3] != "S" {
-		return false
-	}
-
-	return true
-}
-
-func isDiagonalRight(characters [][]string, x int, y int) bool {
-	if x > len(characters)-4 || y > len(characters[0])-4 {
-		return false
-	}
-
-	if characters[x+1][y+1] != "M" || characters[x+2][y+2] != "A" || characters[x+3][y+3] != "S" {
-		return false
-	}
-
-	return true
-}
-
-func isReverseDiagonalRight(characters [][]string, x int, y int) bool {
-	if x < 3 || y > len(characters[0])-4 {
-		return false
-	}
-	if characters[x-1][y+1] != "M" || characters[x-2][y+2] != "A" || characters[x-3][y+3] != "S" {
-		return false
-	}
-
-	return true
+	return false
 }
 
 func checkIfItsAStart(characters [][]string, x int, y int) int {
@@ -107,63 +53,37 @@ func checkIfItsAStart(characters [][]string, x int, y int) int {
 	}
 	count := 0
 
-	if isRow(characters, x, y) {
-		count++
-	}
+	for i := 0; i < 8; i++ {
+		if isInside(x+S[i][0], y+S[i][1], len(characters)-1, len(characters[0])-1) &&
+			characters[x+M[i][0]][y+M[i][1]] == "M" &&
+			characters[x+A[i][0]][y+A[i][1]] == "A" &&
+			characters[x+S[i][0]][y+S[i][1]] == "S" {
+			count++
+		}
 
-	if isReverseRow(characters, x, y) {
-		count++
-	}
-
-	if isCol(characters, x, y) {
-		count++
-	}
-
-	if isReverseCol(characters, x, y) {
-		count++
-	}
-
-	if isDiagonalLeft(characters, x, y) {
-		count++
-	}
-
-	if isReverseDiagonalLeft(characters, x, y) {
-		count++
-	}
-
-	if isDiagonalRight(characters, x, y) {
-		count++
-	}
-
-	if isReverseDiagonalRight(characters, x, y) {
-		count++
 	}
 	return count
 }
 
 func solvePartOne() {
-
 	input, err := os.ReadFile("input.txt")
 	if err != nil {
 		log.Fatal("Couldn't read file: ", err)
 	}
 	lines := strings.Split(strings.TrimSpace(string(input)), "\n")
-	rows := len(lines)
-	cols := len(lines[0])
+	characters := make([][]string, len(lines))
 
-	characters := make([][]string, rows)
-
-	for i := 0; i < rows; i++ {
-		row := make([]string, cols)
-		for j := 0; j < cols; j++ {
+	for i := 0; i < len(lines); i++ {
+		row := make([]string, len(lines[0]))
+		for j := 0; j < len(lines[0]); j++ {
 			row[j] = string(lines[i][j])
 		}
 		characters[i] = row
 	}
 
 	count := 0
-	for i := 0; i < rows; i++ {
-		for j := 0; j < cols; j++ {
+	for i := 0; i < len(lines); i++ {
+		for j := 0; j < len(lines[0]); j++ {
 			count += checkIfItsAStart(characters, i, j)
 		}
 	}
@@ -215,28 +135,24 @@ func solvePartTwo() {
 		log.Fatal("Couldn't read file: ", err)
 	}
 	lines := strings.Split(strings.TrimSpace(string(input)), "\n")
-	rows := len(lines)
-	cols := len(lines[0])
+	characters := make([][]string, len(lines))
 
-	characters := make([][]string, rows)
-
-	for i := 0; i < rows; i++ {
-		row := make([]string, cols)
-		for j := 0; j < cols; j++ {
+	for i := 0; i < len(lines); i++ {
+		row := make([]string, len(lines[0]))
+		for j := 0; j < len(lines[0]); j++ {
 			row[j] = string(lines[i][j])
 		}
 		characters[i] = row
 	}
 
 	count := 0
-	for i := 0; i < rows; i++ {
-		for j := 0; j < cols; j++ {
+	for i := 0; i < len(lines); i++ {
+		for j := 0; j < len(lines[0]); j++ {
 			count += checkIfItsAnX(characters, i, j)
 		}
 	}
 
 	fmt.Println(count)
-
 }
 
 func main() {
