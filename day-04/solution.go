@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -140,7 +141,8 @@ func checkIfItsAStart(characters [][]string, x int, y int) int {
 	return count
 }
 
-func main() {
+func solvePartOne() {
+
 	input, err := os.ReadFile("input.txt")
 	if err != nil {
 		log.Fatal("Couldn't read file: ", err)
@@ -160,7 +162,6 @@ func main() {
 	}
 
 	count := 0
-
 	for i := 0; i < rows; i++ {
 		for j := 0; j < cols; j++ {
 			count += checkIfItsAStart(characters, i, j)
@@ -168,5 +169,83 @@ func main() {
 	}
 
 	fmt.Println(count)
+}
 
+func checkLeftToRight(characters [][]string, x int, y int) bool {
+	if characters[x-1][y-1] == "M" && characters[x+1][y+1] == "S" {
+		return true
+	}
+
+	if characters[x-1][y-1] == "S" && characters[x+1][y+1] == "M" {
+		return true
+	}
+	return false
+
+}
+
+func checkRightToLeft(characters [][]string, x int, y int) bool {
+	if characters[x-1][y+1] == "M" && characters[x+1][y-1] == "S" {
+		return true
+	}
+
+	if characters[x-1][y+1] == "S" && characters[x+1][y-1] == "M" {
+		return true
+	}
+	return false
+
+}
+
+func checkIfItsAnX(characters [][]string, x int, y int) int {
+	if characters[x][y] != "A" {
+		return 0
+	}
+	if (x < 1) || y < 1 || x > len(characters)-2 || y > len(characters[0])-2 {
+		return 0
+	}
+
+	if checkLeftToRight(characters, x, y) && checkRightToLeft(characters, x, y) {
+		return 1
+	}
+	return 0
+}
+
+func solvePartTwo() {
+	input, err := os.ReadFile("input.txt")
+	if err != nil {
+		log.Fatal("Couldn't read file: ", err)
+	}
+	lines := strings.Split(strings.TrimSpace(string(input)), "\n")
+	rows := len(lines)
+	cols := len(lines[0])
+
+	characters := make([][]string, rows)
+
+	for i := 0; i < rows; i++ {
+		row := make([]string, cols)
+		for j := 0; j < cols; j++ {
+			row[j] = string(lines[i][j])
+		}
+		characters[i] = row
+	}
+
+	count := 0
+	for i := 0; i < rows; i++ {
+		for j := 0; j < cols; j++ {
+			count += checkIfItsAnX(characters, i, j)
+		}
+	}
+
+	fmt.Println(count)
+
+}
+
+func main() {
+	isPartTwo := flag.Bool("partTwo", false, "Solve Part Two")
+	flag.Parse()
+
+	if *isPartTwo {
+		solvePartTwo()
+	} else {
+		solvePartOne()
+	}
 }
