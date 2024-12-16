@@ -157,11 +157,19 @@ func solvePartTwo() {
 
 func main() {
 	isPartTwo := flag.Bool("partTwo", false, "Solve Part Two")
+	isImproved := flag.Bool("improved", false, "Use improved solution")
 	flag.Parse()
+	if *isImproved {
+		if *isPartTwo {
+		} else {
+			solvePartOneImproved()
+		}
 
-	if *isPartTwo {
-		solvePartTwo()
 	} else {
-		solvePartOne()
+		if *isPartTwo {
+			solvePartTwo()
+		} else {
+			solvePartOne()
+		}
 	}
 }
