@@ -135,14 +135,14 @@ func solvePartTwo() {
 
 func main() {
 	isPartTwo := flag.Bool("partTwo", false, "Solve part two")
-	claude := flag.Bool("claude", false, "Solve it the claude way")
+	improved := flag.Bool("improved", false, "Use improved solution")
 
 	flag.Parse()
-	if *claude {
+	if *improved {
 		if *isPartTwo {
-			solvePartTwoClaude()
+			solvePartTwoImproved()
 		} else {
-			solvePartOneClaude()
+			solvePartOneImproved()
 		}
 	} else {
 		if *isPartTwo {

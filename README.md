@@ -13,7 +13,7 @@ advent-of-code-2024/
 │
 ├── day-01/
 │   ├── solution.go      # My initial solution
-│   ├── improved.go      # Refined solution after Claude's feedback -- might not exist
+│   ├── improved.go      # Refined solution after Claude's feedback, or online resources -- might not exist
 │   ├── problem.md       # AoC problem description
 │   └── input.txt        # Input file
 │
@@ -32,17 +32,17 @@ go run solution.go
 # Build and run Part Two
 go run solution.go -partTwo
 
-# Use the Claude-improved solution (if improved.go exists)
-go run solution.go improved.go -claude
+# Use the improved solution (if improved.go exists)
+go run solution.go improved.go -improved
 
-# Use Claude-improved solution for Part Two
-go run solution.go improved.go -claude -partTwo
+# Use improved solution for Part Two
+go run solution.go improved.go -improved -partTwo
 ```
 
 ### Flags
 - `-partTwo`: Switches the solution to solve Part Two of the puzzle
   - When this flag is passed, the program will typically use a different logic or input processing method for Part Two of the puzzle
-- `-claude`: Uses the improved solution from `improved.go` (if the file exists)
+- `-improved`: Uses the improved solution from `improved.go` (if the file exists)
 
 ## Learning Goals
 - [ ] Understand Go's syntax and idioms
@@ -56,6 +56,7 @@ go run solution.go improved.go -claude -partTwo
    - Code review
    - Idiomatic Go improvements
    - Learning opportunities
+3. I may use online resources for the improved version of the solution.
 
 ## Resources
 - [Advent of Code](https://adventofcode.com/)

@@ -52,7 +52,7 @@ func abs(number int) int {
 	}
 }
 
-func solvePartOneClaude() {
+func solvePartOneImproved() {
 	firstList, secondList, err := parseNumbersFromFile("input.txt")
 	if err != nil {
 		log.Fatal(err)
@@ -69,7 +69,7 @@ func solvePartOneClaude() {
 	fmt.Println("Distance: ", distance)
 }
 
-func solvePartTwoClaude() {
+func solvePartTwoImproved() {
 	firstList, secondList, err := parseNumbersFromFile("input.txt")
 	if err != nil {
 		log.Fatal(err)
