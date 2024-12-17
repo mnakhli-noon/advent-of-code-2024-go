@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -65,23 +66,58 @@ func check(index int, report []int, numberRule []int) bool {
 
 func solvePartOne() {
 	rules, reports := readInput()
-
 	output := 0
+
 	for _, report := range reports {
 		for index, number := range report {
 
 			if check(index, report, rules[number]) {
 				if index == len(report)-1 {
-					output += report[(index/2)]
+					output += report[(index / 2)]
 				}
 			} else {
 				break
 			}
 		}
 	}
-  fmt.Println(output)
+	fmt.Println(output)
+}
+
+func solvePartTwo() {
+	rules, reports := readInput()
+
+	sortFunc := func(a int, b int) int {
+		if slices.Contains(rules[a], b) {
+			return 1
+		}
+		if slices.Contains(rules[b], a) {
+			return -1
+		}
+		return 0
+	}
+
+	output := 0
+	for _, report := range reports {
+		for index, number := range report {
+			if !check(index, report, rules[number]) {
+				slices.SortFunc(report, sortFunc)
+				output += report[((len(report) - 1) / 2)]
+				break
+			}
+		}
+	}
+
+	fmt.Println(output)
+
 }
 
 func main() {
-	solvePartOne()
+	isPartTwo := flag.Bool("partTwo", false, "Solve part two")
+	flag.Parse()
+
+	if *isPartTwo {
+		solvePartTwo()
+	} else {
+		solvePartOne()
+	}
 }
