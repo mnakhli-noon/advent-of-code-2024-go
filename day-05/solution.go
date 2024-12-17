@@ -69,17 +69,19 @@ func solvePartOne() {
 	output := 0
 
 	for _, report := range reports {
+		shouldAdd := true
 		for index, number := range report {
-
-			if check(index, report, rules[number]) {
-				if index == len(report)-1 {
-					output += report[(index / 2)]
-				}
-			} else {
+			if !check(index, report, rules[number]) {
+				shouldAdd = false
 				break
 			}
 		}
+
+		if shouldAdd {
+			output += report[((len(report) - 1) / 2)]
+		}
 	}
+
 	fmt.Println(output)
 }
 
