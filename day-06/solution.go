@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -182,6 +183,21 @@ func solvePartTwo() {
 }
 
 func main() {
-	solvePartTwo()
-}
+	isPartTwo := flag.Bool("partTwo", false, "Solve Part Two")
+	isImproved := flag.Bool("improved", false, "Use improved solution")
+	flag.Parse()
 
+	if *isImproved {
+		if *isPartTwo {
+			solvePartTwoImproved()
+		} else {
+			solvePartOneImproved()
+		}
+	} else {
+		if *isPartTwo {
+			solvePartTwo()
+		} else {
+			solvePartOne()
+		}
+	}
+}

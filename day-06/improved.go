@@ -6,22 +6,26 @@ import (
 	"os"
 )
 
-type State2 struct {
+type StateImproved struct {
 	x, y, dir int
 }
 
-func main2() {
-	grid, startX, startY, initialDir := readInput2()
+func solvePartOneImproved() {
+	grid, startX, startY, initialDir := readInputImproved()
+	count := simulatePartOne(grid, startX, startY, initialDir)
+	fmt.Println(count)
+}
+
+func solvePartTwoImproved() {
+	grid, startX, startY, initialDir := readInputImproved()
 	count := 0
 
 	for y := 0; y < len(grid); y++ {
 		for x := 0; x < len(grid[y]); x++ {
-			// Skip starting position and existing obstructions
 			if (x == startX && y == startY) || grid[y][x] == '#' {
 				continue
 			}
 
-			// Create modified grid with new obstruction
 			modified := copyGrid(grid)
 			modified[y][x] = '#'
 
@@ -34,7 +38,7 @@ func main2() {
 	fmt.Println(count)
 }
 
-func readInput2() ([][]rune, int, int, int) {
+func readInputImproved() ([][]rune, int, int, int) {
 	file, _ := os.Open("input.txt")
 	defer file.Close()
 
@@ -70,33 +74,63 @@ func copyGrid(grid [][]rune) [][]rune {
 }
 
 func simulate(grid [][]rune, startX, startY, initialDir int) bool {
-	dirs := []struct{ dx, dy int }{{0, -1}, {1, 0}, {0, 1}, {-1, 0}} // Up, Right, Down, Left
-	visited := make(map[State2]bool)
+	dirs := []struct{ dx, dy int }{{0, -1}, {1, 0}, {0, 1}, {-1, 0}}
+	visited := make(map[StateImproved]bool)
 	x, y, currentDir := startX, startY, initialDir
 
 	for {
-		state := State2{x, y, currentDir}
+		state := StateImproved{x, y, currentDir}
 		if visited[state] {
-			return true // Loop detected
+			return true
 		}
 		visited[state] = true
 
-		// Check next position
 		dx := dirs[currentDir].dx
 		dy := dirs[currentDir].dy
 		nx := x + dx
 		ny := y + dy
 
-		// Check if next cell is blocked or out of bounds
 		if ny >= 0 && ny < len(grid) && nx >= 0 && nx < len(grid[ny]) && grid[ny][nx] == '#' {
-			currentDir = (currentDir + 1) % 4 // Turn right
+			currentDir = (currentDir + 1) % 4
 		} else {
-			// Move forward
 			x, y = nx, ny
-			// Check if out of grid
 			if x < 0 || x >= len(grid[0]) || y < 0 || y >= len(grid) {
-				return false // Escaped, no loop
+				return false
 			}
 		}
 	}
+}
+
+func simulatePartOne(grid [][]rune, startX, startY, initialDir int) int {
+	dirs := []struct{ dx, dy int }{{0, -1}, {1, 0}, {0, 1}, {-1, 0}}
+	currentDir := initialDir
+	x, y := startX, startY
+	visited := make(map[[2]int]bool)
+	visited[[2]int{x, y}] = true
+
+	for {
+		dx := dirs[currentDir].dx
+		dy := dirs[currentDir].dy
+		nx := x + dx
+		ny := y + dy
+
+		isObstruction := false
+		if ny >= 0 && ny < len(grid) && nx >= 0 && nx < len(grid[ny]) {
+			if grid[ny][nx] == '#' {
+				isObstruction = true
+			}
+		}
+
+		if isObstruction {
+			currentDir = (currentDir + 1) % 4
+		} else {
+			x, y = nx, ny
+			if x < 0 || x >= len(grid[0]) || y < 0 || y >= len(grid) {
+				break
+			}
+			visited[[2]int{x, y}] = true
+		}
+	}
+
+	return len(visited)
 }
