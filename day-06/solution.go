@@ -37,8 +37,15 @@ var nextDircetion = map[WalkDirection]WalkDirection{
 	LEFT:  UP,
 }
 
+type State struct {
+	x, y int
+	dir  WalkDirection
+}
+
 func readInput() (Grid, int, int) {
 	file, err := os.Open("input.txt")
+	defer file.Close()
+
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -106,10 +113,75 @@ func solvePartOne() {
 	fmt.Println(count)
 }
 
+func (g Grid) copyGrid() Grid {
+	newG := make(Grid, len(g))
+	for i, line := range g {
+		newG[i] = make([]rune, len(g[i]))
+		copy(newG[i], line)
+	}
+	return newG
+}
+
+func (g Grid) checkIfPositionInside(x int, y int) bool {
+	return x >= 0 && x < len(g) && y >= 0 && y < len(g[x])
+}
+
+func (g Grid) hasLoop(x int, y int, dir WalkDirection) bool {
+	visitied := make(map[State]bool)
+
+	currentX, currentY := x, y
+	for {
+		state := State{currentX, currentY, dir}
+		if visitied[state] {
+			return true
+		}
+		visitied[state] = true
+
+		nextX := currentX + walkPosition[dir].x
+		nextY := currentY + walkPosition[dir].y
+		if g.checkIfPositionInside(nextX, nextY) {
+			if g[nextX][nextY] == '#' {
+				dir = nextDircetion[dir]
+			} else {
+				currentX = nextX
+				currentY = nextY
+			}
+		} else {
+			return false
+		}
+	}
+}
+
+func (g Grid) countTheLoops(x int, y int) int {
+	count := 0
+
+	for i := range g {
+		for j := range g[i] {
+			if (i == x && j == y) || g[i][j] == '#' {
+				continue
+			}
+
+			modified := make(Grid, len(g))
+			modified = g.copyGrid()
+			modified[i][j] = '#'
+
+			if modified.hasLoop(x, y, UP) {
+				count++
+			}
+		}
+	}
+	return count
+}
+
 func solvePartTwo() {
-	fmt.Println("hi")
+	lab, x, y := readInput()
+
+	loops := lab.countTheLoops(x, y)
+
+	fmt.Println(loops)
 }
 
 func main() {
-	solvePartOne()
+	solvePartTwo()
 }
+
