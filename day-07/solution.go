@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -75,7 +76,61 @@ func solvePartOne() {
 	fmt.Println(sum)
 }
 
+func concat(a, b int) int {
+	aStr := ""
+	if a != 0 {
+		aStr = strconv.Itoa(a)
+	}
+	bStr := strconv.Itoa(b)
+
+	number, _ := strconv.Atoi(aStr + bStr)
+
+	return number
+}
+
+func canGetResultFromNumbers2(result int, numbers []int, acc int) bool {
+	if len(numbers) == 0 {
+		return acc == result
+	}
+	firstNumber := numbers[0]
+	if len(numbers) == 1 {
+		return acc*firstNumber == result || acc+firstNumber == result || concat(acc, firstNumber) == result
+	}
+
+	addition := canGetResultFromNumbers2(result, numbers[1:], acc+firstNumber)
+	multiplication := false
+	if acc == 0 {
+		multiplication = canGetResultFromNumbers2(result, numbers[1:], firstNumber)
+	} else {
+		multiplication = canGetResultFromNumbers2(result, numbers[1:], acc*firstNumber)
+	}
+	concat := canGetResultFromNumbers2(result, numbers[1:], concat(acc, firstNumber))
+
+	return addition || multiplication || concat
+}
+
+func solvePartTwo() {
+	equations := readInput()
+	sum := 0
+
+	for result, numbers := range equations {
+		if canGetResultFromNumbers2(result, numbers, 0) {
+			sum += result
+		}
+	}
+	fmt.Println(sum)
+
+}
+
 func main() {
-	solvePartOne()
+	isPartTwo := flag.Bool("partTwo", false, "Solve part two")
+
+	flag.Parse()
+
+	if *isPartTwo {
+		solvePartTwo()
+	} else {
+		solvePartOne()
+	}
 
 }
