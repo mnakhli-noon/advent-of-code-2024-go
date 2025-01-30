@@ -10,39 +10,51 @@ import (
 	"strings"
 )
 
-type Equations map[int][]int
+type EquationSet map[int][]int
 
-func readInput() Equations {
+func parseLine(line string) (int, []int, error) {
+	parts := strings.Split(line, ":")
+	if len(parts) != 2 {
+		return 0, nil, fmt.Errorf("Invalid format: expected 'result: numbers' in line %q", line)
+	}
+	result, err := strconv.Atoi(parts[0])
+	if err != nil {
+		return 0, nil, fmt.Errorf("Invalid result %q: %v", parts[0], err)
+	}
+
+	numbersString := strings.Fields(parts[1])
+	numbers := make([]int, 0, len(numbersString))
+
+	for _, numberString := range numbersString {
+		number, err := strconv.Atoi(numberString)
+		if err != nil {
+			return 0, nil, fmt.Errorf("Invalid number %q: %v", numberString, err)
+		}
+
+		numbers = append(numbers, number)
+	}
+
+	return result, numbers, nil
+}
+
+func readInput() EquationSet {
 	file, err := os.Open("input.txt")
 
 	if err != nil {
 		log.Fatal("Couldn't open 'input.txt' file ", err)
 	}
+	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
-	equations := Equations{}
+	equations := EquationSet{}
 
 	for scanner.Scan() {
-		line := scanner.Text()
-		parts := strings.Split(line, ":")
-
-		result, err := strconv.Atoi(parts[0])
+		result, numbers, err := parseLine(scanner.Text())
 		if err != nil {
-			log.Fatal("Couldn't convert result ", parts[0], " to int")
+			log.Fatal("Error parsing line: ", err)
 		}
 
-		numberStriped := strings.TrimSpace(parts[1])
-		numbersStr := strings.Split(numberStriped, " ")
-
-		array := []int{}
-		for _, num := range numbersStr {
-			number, err := strconv.Atoi(num)
-			if err != nil {
-				log.Fatal("Couldn't convert ", num, " to int")
-			}
-			array = append(array, number)
-		}
-		equations[result] = array
+		equations[result] = numbers
 	}
 
 	return equations
@@ -77,10 +89,10 @@ func solvePartOne() {
 }
 
 func concat(a, b int) int {
-	aStr := ""
-	if a != 0 {
-		aStr = strconv.Itoa(a)
+	if a == 0 {
+		return b
 	}
+	aStr := strconv.Itoa(a)
 	bStr := strconv.Itoa(b)
 
 	number, _ := strconv.Atoi(aStr + bStr)
